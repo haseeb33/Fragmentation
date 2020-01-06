@@ -39,7 +39,7 @@ def populationGraph(t): # graph of estimated number of docs for topic t of LDA
     sorted_d_keys = sorted(d.keys())
     plt.plot([d[i]/d_years[i] for i in sorted_d_keys])
 
-def Init_d_years():
+def Init_d_years(): #fill d_years dict
     for p in Theta_ls:
         if p[year_col] not in d_years.keys():
             d_years[p[year_col]] = 1
@@ -56,35 +56,27 @@ def timeCorr(t1,t2):
     ax.set_ylim(-0.75,0.75)
     ax.plot(corr_time)
 
-#def highTheta(t1, t2):
-    
+def highThetaCorr(t1, t2):
+    corr_time = []  
+    for i in sorted(d_years.keys()):
+        a = Theta_df[Theta_df[60]==i]
+        corr_time.append(a[a[t1]>.015][t1].corr(a[a[t2]>.015][t2]))
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(corr_time)
+    ax.legend()
+    plt.show()
 
-def graph(dtm, x, a=None, b=None, c=None, d=None, e=None, f=None, g=None, h=None, i=None, j=None):
+def graph(dtm, ls): #ls is list of LDA topics, 
     global dtm_gl
     dtm_gl = dtm
-    if j: 
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e), T,J(f), T,J(g), T,J(h), T,J(i), T,J(j))
-    elif i:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e), T,J(f), T,J(g), T,J(h), T,J(i))
-    elif h:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e), T,J(f), T,J(g), T,J(h))
-    elif g:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e), T,J(f), T,J(g))
-    elif f:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e), T,J(f))
-    elif e:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d), T,J(e))
-    elif d:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c), T,J(d))
-    elif c:
-        plt.plot(T,J(x), T,J(a), T,J(b), T,J(c))
-    elif b:
-        plt.plot(T,J(x), T,J(a), T,J(b))
-    elif a:
-        plt.plot(T,J(x), T,J(a))
-    else:
-        plt.plot(T,J(x))
-
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    for i in ls:
+        ax.plot(T, J(i), label="Topic %i" %i)
+    ax.legend()
+    plt.show()
+    
 def getAllDTMwords(topic):
     words = []
     for i in range(31):
@@ -143,5 +135,5 @@ for i_index, i in enumerate(JS):
             if a not in LDA_related_DTM:
                 LDA_related_DTM.append(a)
 LDA_related_DTM = sorted(LDA_related_DTM)
-Init_d_years()                
+Init_d_years() #function call to fill d_years dict    
 DTM_all, DTM_2orMore = DTMcount()
