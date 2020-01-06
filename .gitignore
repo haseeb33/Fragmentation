@@ -6,4 +6,6 @@
 *.blg
 *.out
 *.bst
+*.xlsx
+*.xlsm
 *.DS_Store

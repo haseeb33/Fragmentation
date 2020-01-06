@@ -10,18 +10,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import re
 
-TIME_SLICES = 30
-T = [i for i in range(31)]
-dtm_gl = 0
-year_col = 60
-d_years = {}
+TIME_SLICES = 30 # Max time slice number
+T = [i for i in range(31)] # Total time slices
+dtm_gl = 0 # global value: changed with graph() function
+year_col = 60 # year's column in sheet name "Theta"
+d_years = {} # count of docs in each year, filled with function Init_d_years() call
 
-def J(var):
+def removeSpecialChar(orignal): 
+    return re.sub(r"[^a-zA-Z0-9.]+", '', orignal)
+def strToval(a):
+    w,m = a.split(",")
+    return removeSpecialChar(w)
+def J(var): # use in graph()
     return JS[var][dtm_gl*31:(dtm_gl+1)*31]
-def DTMWithAllLDA(a):
+def DTMWithAllLDA(a): # use in DTMcount(), can also be called indiviually 
     return [i[1] for i in LDA_related_DTM if i[0] == a] 
   
-def populationGraph(t):
+def populationGraph(t): # graph of estimated number of docs for topic t of LDA
     d = {}
     for p in Theta_ls:
         if p[year_col] not in d.keys():
@@ -79,15 +84,6 @@ def graph(dtm, x, a=None, b=None, c=None, d=None, e=None, f=None, g=None, h=None
         plt.plot(T,J(x), T,J(a))
     else:
         plt.plot(T,J(x))
-
-def removeSpecialChar(orignal):
-    final = re.sub(r"[^a-zA-Z0-9.]+", '', orignal)
-    return final
-
-def strToval(a):
-    w,m = a.split(",")
-    w = removeSpecialChar(w)
-    return w
 
 def getAllDTMwords(topic):
     words = []
@@ -147,5 +143,5 @@ for i_index, i in enumerate(JS):
             if a not in LDA_related_DTM:
                 LDA_related_DTM.append(a)
 LDA_related_DTM = sorted(LDA_related_DTM)
-                
+Init_d_years()                
 DTM_all, DTM_2orMore = DTMcount()
