@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Updated on Sat Jan 18 16:27:22 2020
+Updated on Sat Jan 20 17:35:22 2020
 
 @author: khan
 """
@@ -26,14 +26,17 @@ def removeSpecialChar(orignal):
 def strToval(a):
     w,m = a.split(",")
     return removeSpecialChar(w)
-def J(var): # use in graph()
+def J(var): # use in graphJS() function
     return JS[var][dtm_gl*TIME_SLICES:(dtm_gl+1)*TIME_SLICES]
 def DTMWithAllLDA(a): # use in DTMcount(), can also be called indiviually
     return [i[1] for i in DTM_related_LDA if i[0] == a]
 
-def populationGraph(t): # graph of estimated number of docs for topic t of LDA
+def populationGraph(t, mdoel="LDA"): # graph of estimated number of docs for topic t of LDA or DTM
     d = {}
-    for p in Theta_ls:
+    distribution = Theta_ls
+    if model == "DTM":
+        distribution = Gemma_ls
+    for p in distribution:
         if p[year_col] not in d.keys():
             d[p[year_col]] = p[t]
             d_years[p[year_col]] = 1
@@ -70,7 +73,7 @@ def timeCorr(t1,t2):
 def highThetaCorr(t1, t2):
     corr_time = []
     for i in sorted(d_years.keys()):
-        a = Theta_df[Theta_df[60]==i]
+        a = Theta_df[Theta_df[TOPICS]==i]
         corr_time.append(a[a[t1]>.015][t1].corr(a[a[t2]>.015][t2]))
     plt.plot(corr_time)
 
@@ -129,14 +132,15 @@ def common(l1, l2):
 f = pd.ExcelFile(file_name)
 DTM = pd.read_excel(f, sheet_name = "DTM", index_col=0).values.tolist()
 LDA = pd.read_excel(f, sheet_name = "LDA", index_col=0).values.tolist()
-DTM_time = pd.read_excel(f, sheet_name = "DTMTime").values.tolist()
-LDA_time = pd.read_excel(f, sheet_name = "LDATime").values.tolist()
+DTM_time = pd.read_excel(f, sheet_name = "DTMTime").values.tolist()[0][1]
+LDA_time = pd.read_excel(f, sheet_name = "LDATime").values.tolist()[0][1]
 JS = pd.read_excel(f, sheet_name = "JS", index_col=0).values.tolist()
 if 'Theta' in wb.sheetnames:
     Theta_df = pd.read_excel(f, sheet_name = "Theta", index_col=0)
     Theta_ls = Theta_df.values.tolist()
 if 'DTMDistribution' in wb.sheetnames:
-    DTM_gemma = pd.read_excel(f, sheet_name = "DTMDistribution", index_col=0)
+    Gemma_df = pd.read_excel(f, sheet_name = "DTMDistribution", index_col=0)
+    Gemma_ls = Gemma_df.values.tolist()
 
 DTM_related_LDA = []
 
