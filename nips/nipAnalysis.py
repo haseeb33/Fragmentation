@@ -63,7 +63,7 @@ def timeCorr(t1,t2):
     corr_time = []
 
     for i in sorted(d_years.keys()):
-        a = Theta_df[Theta_df[TOPICS]==i]
+        a = Theta_df[Theta_df[year_col]==i]
         corr_time.append(a[t1].corr(a[t2]))
     fig = plt.figure()
     ax = fig.add_subplot(111)
