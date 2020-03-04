@@ -1,3 +1,11 @@
-# Fragmentation Analysis
+# DTM vs LDA
 
-Fragmentation detection of DTM topics and it's relation with LDA topics is the first step and if some solution can be found that would be great
+In this work, we try to compare two most popular topic models DTM and LDA.
+
+Comparison was based on bellow mentioned points:
+
+1. Computational cost of training
+
+2. Topic Drifting
+
+3. Time series topic popularity extraction
